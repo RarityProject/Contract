@@ -1,6 +1,10 @@
 # Contract
 An open world game based on Rarity.All contracts will store here.
 
+# ESS
+The universal currency of the game world.
+
+address: [0x91c42e167959fe0cf199090ec5a520196995a218](https://ftmscan.com/address/0x91c42e167959fe0cf199090ec5a520196995a218)
 
 ## game register
 After register the rarity token, you can play the game.
