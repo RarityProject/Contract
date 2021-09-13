@@ -17,15 +17,17 @@ contract Essence is ERC20 {
     IRarity constant rarity =
         IRarity(0xce761D788DF608BD21bdd59d6f4B54b2e27F25Bb);
     address beneficiary;
-    uint256 private immutable register_fee = 5 * 10**16;
-    uint256 private immutable _cap = 198 * 10**28;
+    uint256 private immutable register_fee;
+    uint256 private immutable _cap;
     mapping(uint256 => bool) public registered;
 
     event Registered(uint256 token_id);
 
     constructor() ERC20("Essence", "ESS") {
         beneficiary = msg.sender;
-        _mint(msg.sender, 2 * 66 * 10**28);
+        _cap = 198 * 10**28;
+        register_fee = 5 * 10**16;
+        _mint(msg.sender, 132 * 10**28);
     }
 
     function pre_register(uint256 token_id) external payable {
@@ -59,7 +61,7 @@ contract Essence is ERC20 {
         emit Registered(token_id);
     }
 
-    function cap() public view virtual returns (uint256) {
+    function cap() public view returns (uint256) {
         return _cap;
     }
 }
