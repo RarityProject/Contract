@@ -17,7 +17,7 @@ contract Essence is ERC20 {
     IRarity constant rarity =
         IRarity(0xce761D788DF608BD21bdd59d6f4B54b2e27F25Bb);
     address beneficiary;
-    uint256 private immutable register_fee;
+    uint256 immutable register_fee;
     uint256 private immutable _cap;
     mapping(uint256 => bool) public registered;
 
@@ -39,7 +39,7 @@ contract Essence is ERC20 {
         require(msg.value >= register_fee);
         uint256 _level = rarity.level(token_id);
         transfer(beneficiary, msg.value);
-        uint256 reward = _level.mul(1000);
+        uint256 reward = _level.mul(1000*10**18);
         if (reward.add(ERC20.totalSupply()) <= _cap) {
             _mint(msg.sender, reward);
         } else {
