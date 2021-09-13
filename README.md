@@ -14,3 +14,4 @@ address: [0x91c42e167959fe0cf199090ec5a520196995a218](https://ftmscan.com/addres
 ## game register
 After register the rarity token, you can play the game.
 Now start the pre register, you can get `role level * 1000` ESS token reward.Rewards are limited while stocks last.
+![](./imgs/ess.jpg)
