@@ -7,8 +7,6 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 interface IRarity {
     function ownerOf(uint256) external view returns (address);
 
-    function balanceOf(address) external view returns (uint256);
-
     function level(uint256) external view returns (uint256);
 }
 
@@ -16,15 +14,15 @@ contract Essence is ERC20 {
     using SafeMath for uint256;
     IRarity constant rarity =
         IRarity(0xce761D788DF608BD21bdd59d6f4B54b2e27F25Bb);
-    address beneficiary;
-    uint256 immutable register_fee;
+    address payable beneficiary;
+    uint256 public register_fee;
     uint256 private immutable _cap;
-    mapping(uint256 => bool) public registered;
+    mapping(uint256 => bool) public is_registered;
 
     event Registered(uint256 token_id);
 
     constructor() ERC20("Essence", "ESS") {
-        beneficiary = msg.sender;
+        beneficiary = payable(msg.sender);
         _cap = 198 * 10**28;
         register_fee = 5 * 10**16;
         _mint(msg.sender, 132 * 10**28);
@@ -35,17 +33,17 @@ contract Essence is ERC20 {
             rarity.ownerOf(token_id) == msg.sender,
             "You are not the token holder"
         );
-        require(!registered[token_id], "This token has been registered");
-        require(msg.value >= register_fee);
+        require(!is_registered[token_id], "This token has been registered");
+        require(msg.value == register_fee);
+        beneficiary.transfer(msg.value);
         uint256 _level = rarity.level(token_id);
-        transfer(beneficiary, msg.value);
-        uint256 reward = _level.mul(1000*10**18);
+        uint256 reward = _level.mul(1000 * 10**18);
         if (reward.add(ERC20.totalSupply()) <= _cap) {
             _mint(msg.sender, reward);
         } else {
             _mint(msg.sender, _cap.sub(ERC20.totalSupply()));
         }
-        registered[token_id] = true;
+        is_registered[token_id] = true;
         emit Registered(token_id);
     }
 
@@ -54,10 +52,10 @@ contract Essence is ERC20 {
             rarity.ownerOf(token_id) == msg.sender,
             "You are not the token holder"
         );
-        require(!registered[token_id], "This token has been registered");
-        require(msg.value >= register_fee);
-        registered[token_id] = true;
-        transfer(beneficiary, msg.value);
+        require(!is_registered[token_id], "This token has been registered");
+        require(msg.value == register_fee);
+        beneficiary.transfer(msg.value);
+        is_registered[token_id] = true;
         emit Registered(token_id);
     }
 
